@@ -1,0 +1,22 @@
+{
+  "name": "clocks",
+  "version": "1.0.0",
+  "description": "buh",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/choochootrain/clocks.git"
+  },
+  "author": "no",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/choochootrain/clocks/issues"
+  },
+  "homepage": "https://github.com/choochootrain/clocks",
+  "dependencies": {
+    "express": "^4.10.0"
+  }
+}
