@@ -1,4 +1,4 @@
-function initialize(container, id){
+function initialize(container, id, total_time, elapsed_time){
 
     // initialize the html for a new clock
     container.append(
@@ -14,8 +14,8 @@ function initialize(container, id){
     // create a FlipClock
     var clock = clockSelector.find('.clock').FlipClock({
                 id: 'tits',
-                totalTime: 150,
-                elapsedTime: 10,
+                totalTime: total_time,
+                elapsedTime: elapsed_time,
                 clockFace: 'HourlyCounter',
                 countdown: true,
                 autoStart: false,
@@ -25,6 +25,8 @@ function initialize(container, id){
                     },
                     interval: function() {
                       // this.elapsedTime = this.parent.getTime();
+                      clock.elapsedTime = clock.totalTime - clock.getTime().time;
+                      socket.emit('ping', clock.elapsedTime);
                     }
                 }
             });
@@ -41,5 +43,20 @@ function initialize(container, id){
 }
 
 $(document).ready(function() {
-    initialize($('#container-wrapper'), 'penis');
+    window.socket = io.connect('http://localhost:3000');
+
+    socket.on('new', function(data) {
+      initialize($('#container-wrapper'), data.id, data.total_time, data.elapsed_time);
+    });
+
+    socket.on('get', function(data) {
+      initialize($('#container-wrapper'), data.id, data.total_time, data.elapsed_time);
+    });
+
+    socket.on('status', function(data) {
+      console.log('status');
+      console.log(data);
+    });
+
+    socket.emit('new', 'foobar', 250);
 });

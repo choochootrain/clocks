@@ -42,13 +42,13 @@ io.on('connection', function(socket) {
     data = new_clock(name, total_time);
     _id = data.id;
 
-    socket.emit('status', data);
+    socket.emit('new', data);
   });
 
   socket.on('get', function(id) {
     _id = id;
 
-    socket.emit('status', get_clock(_id));
+    socket.emit('get', get_clock(_id));
   });
 
   // update an existing clock
