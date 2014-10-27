@@ -3,7 +3,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
-var db = require('./db');
+var db = require('./db')('clocks.db');
 require('./protocol')(io, db);
 
 app.use(express.static(__dirname + '/static'));
