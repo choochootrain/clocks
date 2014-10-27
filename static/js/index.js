@@ -1,5 +1,4 @@
-function initialize(container, name, id, total_time, elapsed_time){
-
+function initialize(container, id, name, total_time, elapsed_time){
     // initialize the html for a new clock
     container.append(
       '<div id=' + id + ' class="clock-container">\
@@ -21,9 +20,11 @@ function initialize(container, name, id, total_time, elapsed_time){
                 countdown: true,
                 autoStart: false,
                 callbacks: {
-                    stop: function() {
-                      clockSelector.find('.clock-title').html('The clock has stopped!');
-                    },
+                    stop: function(cs) {
+                      return function() {
+                        cs.find('.clock-title').html('The clock has stopped!');
+                      };
+                    }(clockSelector),
                     interval: function() {
                       // this.elapsedTime = this.parent.getTime();
                       clock.elapsedTime = clock.totalTime - clock.getTime().time;
@@ -68,15 +69,15 @@ $(document).ready(function() {
     window.socket = io.connect('http://localhost:3000');
 
     socket.on('new', function(data) {
-      initialize($('#container-wrapper'), data.id, data.name, data.total_time, data.elapsed_time);
+      initialize($('#container-wrapper'), data._id, data.name, data.total_time, data.elapsed_time);
     });
 
     socket.on('get', function(data) {
-      initialize($('#container-wrapper'), data.id, data.name, data.total_time, data.elapsed_time);
+      initialize($('#container-wrapper'), data._id, data.name, data.total_time, data.elapsed_time);
     });
 
-    socket.on('status', function(data) {
-      console.log('status');
+    socket.on('pong', function(data) {
+      console.log('pong');
       console.log(data);
     });
 
@@ -84,6 +85,6 @@ $(document).ready(function() {
 
     $('#newClock').click( function() {
       var clockPrompt = setupClock();
-      var clockInfo = socket.emit('new', clockPrompt.name, clockPrompt.time);
+      socket.emit('new', clockPrompt.name, clockPrompt.time);
     });
 });

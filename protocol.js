@@ -9,14 +9,14 @@ module.exports = function(io, db) {
   
     // get an existing clock
     socket.on('get', function(id) {
-      db.get_clock(_id, function(data) {
+      db.get_clock(id, function(data) {
         socket.emit('get', data);
       });
     });
   
     // update an existing clock
-    socket.on('ping', function(elapsed_time) {
-      db.ping_clock(_id, elapsed_time, function(data) {
+    socket.on('ping', function(id, elapsed_time) {
+      db.ping_clock(id, elapsed_time, function(data) {
         socket.emit('pong', data);
       });
     });
